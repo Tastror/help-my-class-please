@@ -119,10 +119,12 @@ def cv_click(template_src: str, width_rate=0.5, height_rate=0.5, log="", wait_ti
     return len(click_list)
 
 
-def cv_see(template_src: str, wait_time=0.0) -> int:
+def cv_see(template_src: str, strict=False, wait_time=0.0) -> int:
     template_src_path = "./src/" + template_src + ".png"
     temp = cv.imread(template_src_path)
     click_list, rep, thr = [], 10, 0
+    if strict:
+        rep = 1
     while len(click_list) == 0 and rep > 0:
         im = pag.screenshot()
         cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
@@ -147,7 +149,7 @@ def sign_up(platform: str, lasting_minutes: int) -> None:
         time.sleep(check_interval)
 
 
-def go_to_class(cla) -> int:
+def go_to_class(cla, global_list) -> int:
     name = cla.get("name", "<名称未知>")
     print("即将进入课堂:", name)
     platform = cla.get("platform", "")
@@ -160,6 +162,7 @@ def go_to_class(cla) -> int:
         myname = detail.get("myname", "")
         auto_close_audio = detail.get("auto_close_audio", False)
         browser = None
+        global_list.append(browser)
         if url == "" and meeting_id == "":
             print_error("加入会议失败：没有网址或会议号")
             return 3
@@ -198,8 +201,9 @@ def go_to_class(cla) -> int:
             press("win", log="正在搜索并打开腾讯会议", wait_time=0.5)
             paste("腾讯会议", wait_time=0.5)
             press("enter", wait_time=5)
-            pag.hotkey('win', 'tab'), time.sleep(1)
-            cv_click("awake", wait_time=1)
+            if not cv_see('add_meeting', strict=True):
+                pag.hotkey('win', 'tab'), time.sleep(1)
+                cv_click("awake", wait_time=1)
             cv_click('add_meeting', log="正在点击加入会议", wait_time=1)
             cv_click('meeting_id', 1, 2.2, log="正在点击会议号")
             clear_paste(meeting_id, log="正在输入会议号")
@@ -274,6 +278,7 @@ class HelpMyClassPlease:
     def run(self) -> None:
         old_day = 0
         lck_threads = lock_threads()
+        global_list = []
         use_test, sleep_time, weekday_for_test, time_for_test = False, 10, 1, 499  # 禁用测试请注释将 use_test 置为 False
         if use_test:
             print_warning("Attention: 当前为测试用例，时间流速与平常会有差异。测试参数 "
@@ -304,7 +309,7 @@ class HelpMyClassPlease:
                     run_id_list.append(i)
                     self.today_list.remove(i)
             for i in run_id_list:
-                lck_threads.create(target=go_to_class, args=(self.config[i],), daemon=True)
+                lck_threads.create(target=go_to_class, args=(self.config[i], global_list), daemon=True)
             lck_threads.start_all()
             time.sleep(self.sleep_time)
             print()
