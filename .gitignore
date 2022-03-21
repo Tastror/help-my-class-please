@@ -1,0 +1,7 @@
+node_modules/
+package-lock.json
+.DS_Store
+dist
+# server data
+server/data/*
+!server/data/README.md
