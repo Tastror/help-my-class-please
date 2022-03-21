@@ -270,7 +270,7 @@ class HelpMyClassPlease:
         print()
 
     def read_config(self) -> None:
-        file_name = "./class.json"
+        file_name = "../class.json"
         self.config = json.load(open(file_name, 'r', encoding='utf-8'))
         if len(self.config) > 0:
             print("\033[1;32m课程已从", file_name, "中导入\033[0m")
