@@ -38,7 +38,7 @@
 - 在该目录下
 
   ```shell
-  python3 ./helpMyClassPlease
+  python3 ./client/helpMyClassPlease.py
   ```
   
   即可运行．如果要一直运行，需要后台常开且不能进入睡眠模式．
