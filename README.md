@@ -15,6 +15,12 @@
 
 ### 使用方式
 
+- 进入`client`目录
+
+  ```shell
+  cd client
+  ```
+
 - 安装依赖项．
 
 - 仿照样例配置好 class.json．
@@ -38,7 +44,7 @@
 - 在该目录下
 
   ```shell
-  python3 ./client/helpMyClassPlease.py
+  python3 ./helpMyClassPlease.py
   ```
   
   即可运行．如果要一直运行，需要后台常开且不能进入睡眠模式．
