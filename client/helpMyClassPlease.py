@@ -269,7 +269,8 @@ class HelpMyClassPlease:
     def parser(self):
         parser = argparse.ArgumentParser("help my class please")
         parser.add_argument('-t', '--test', nargs='?', type=str, const='[10, 1, 499]', default='[None]',
-                            help="use a test time to run, you can change it by adding list of 3 int: [seconds pre minute, now weekday, now time]")
+                            help="use a test time to run, you can change it by adding list of 3 int: [seconds pre "
+                                 "minute, now weekday, now time]")
         parser.add_argument('-j', '--json', type=str, default="./class.json",
                             help="add your class.json path")
         self.args = parser.parse_args()
@@ -323,8 +324,6 @@ class HelpMyClassPlease:
             lck_threads.start_all()
             time.sleep(self.sleep_time)
             print()
-
-
 
 
 if __name__ == "__main__":
