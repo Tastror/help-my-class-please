@@ -1,4 +1,5 @@
 import re
+import sys
 import json
 import time
 import ssl
@@ -149,11 +150,12 @@ def sign_up(platform: str, lasting_minutes: int) -> None:
         time.sleep(check_interval)
 
 
-def go_to_class(cla, global_list) -> int:
+def go_to_class(cla) -> int:
     name = cla.get("name", "<名称未知>")
     print("即将进入课堂:", name)
     platform = cla.get("platform", "")
     detail = cla.get("detail", {})
+    press("space", log="正在唤醒", wait_time=3)
 
     if platform == "腾讯会议":
         url = detail.get("url", "")
@@ -162,7 +164,6 @@ def go_to_class(cla, global_list) -> int:
         myname = detail.get("myname", "")
         auto_close_audio = detail.get("auto_close_audio", False)
         browser = None
-        global_list.append(browser)
         if url == "" and meeting_id == "":
             print_error("加入会议失败：没有网址或会议号")
             return 3
@@ -263,14 +264,13 @@ class HelpMyClassPlease:
         self.today_list = []
         self.sleep_time = 60
 
-    def init(self) -> None:
-        self.read_config()
+    def init(self, file_name) -> None:
+        self.read_config(file_name)
         self.today_list = [i for i in range(len(self.config))]
         print("\033[1;35mWarning: 如果开启 proxy，网页功能可能无法正常启动，请检查后再开启本程序\033[0m")
         print()
 
-    def read_config(self) -> None:
-        file_name = "../class.json"
+    def read_config(self, file_name) -> None:
         self.config = json.load(open(file_name, 'r', encoding='utf-8'))
         if len(self.config) > 0:
             print("\033[1;32m课程已从", file_name, "中导入\033[0m")
@@ -278,7 +278,6 @@ class HelpMyClassPlease:
     def run(self) -> None:
         old_day = 0
         lck_threads = lock_threads()
-        global_list = []
         use_test, sleep_time, weekday_for_test, time_for_test = False, 10, 1, 499  # 禁用测试请注释将 use_test 置为 False
         if use_test:
             print_warning("Attention: 当前为测试用例，时间流速与平常会有差异。测试参数 "
@@ -309,7 +308,7 @@ class HelpMyClassPlease:
                     run_id_list.append(i)
                     self.today_list.remove(i)
             for i in run_id_list:
-                lck_threads.create(target=go_to_class, args=(self.config[i], global_list), daemon=True)
+                lck_threads.create(target=go_to_class, args=(self.config[i],), daemon=True)
             lck_threads.start_all()
             time.sleep(self.sleep_time)
             print()
@@ -317,5 +316,8 @@ class HelpMyClassPlease:
 
 if __name__ == "__main__":
     hmcp = HelpMyClassPlease()
-    hmcp.init()
+    if len(sys.argv) > 1:
+        hmcp.init(sys.argv[1])
+    else:
+        hmcp.init("./class.json")
     hmcp.run()
