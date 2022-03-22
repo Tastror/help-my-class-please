@@ -1,10 +1,11 @@
 import re
-import sys
 import json
 import time
 import ssl
+import ast
 import urllib3
 import requests
+import argparse
 import threading
 import cv2 as cv
 import numpy as np
@@ -152,10 +153,10 @@ def sign_up(platform: str, lasting_minutes: int) -> None:
 
 def go_to_class(cla) -> int:
     name = cla.get("name", "<名称未知>")
-    print("即将进入课堂:", name)
     platform = cla.get("platform", "")
     detail = cla.get("detail", {})
-    press("space", log="正在唤醒", wait_time=3)
+    press("space", log="正在唤醒", wait_time=5)
+    print("即将进入课堂:", name)
 
     if platform == "腾讯会议":
         url = detail.get("url", "")
@@ -260,26 +261,36 @@ def go_to_class(cla) -> int:
 
 class HelpMyClassPlease:
     def __init__(self) -> None:
+        self.args = []
         self.config = []
         self.today_list = []
         self.sleep_time = 60
 
-    def init(self, file_name) -> None:
-        self.read_config(file_name)
+    def parser(self):
+        parser = argparse.ArgumentParser("help my class please")
+        parser.add_argument('-t', '--test', nargs='?', type=str, const='[10, 1, 499]', default='[None]',
+                            help="use a test time to run, you can change it by adding list of 3 int: [seconds pre minute, now weekday, now time]")
+        parser.add_argument('-j', '--json', type=str, default="./class.json",
+                            help="add your class.json path")
+        self.args = parser.parse_args()
+        self.args.test = ast.literal_eval(self.args.test)
+
+    def init(self) -> None:
+        self.read_config()
         self.today_list = [i for i in range(len(self.config))]
         print("\033[1;35mWarning: 如果开启 proxy，网页功能可能无法正常启动，请检查后再开启本程序\033[0m")
         print()
 
-    def read_config(self, file_name) -> None:
-        self.config = json.load(open(file_name, 'r', encoding='utf-8'))
+    def read_config(self) -> None:
+        self.config = json.load(open(self.args.json, 'r', encoding='utf-8'))
         if len(self.config) > 0:
-            print("\033[1;32m课程已从", file_name, "中导入\033[0m")
+            print("\033[1;32m课程已从", self.args.json, "中导入\033[0m")
 
     def run(self) -> None:
         old_day = 0
         lck_threads = lock_threads()
-        use_test, sleep_time, weekday_for_test, time_for_test = False, 10, 1, 499  # 禁用测试请注释将 use_test 置为 False
-        if use_test:
+        if self.args.test[0] is not None:
+            sleep_time, weekday_for_test, time_for_test = self.args.test[0], self.args.test[1], self.args.test[2]
             print_warning("Attention: 当前为测试用例，时间流速与平常会有差异。测试参数 "
                           + str((sleep_time, weekday_for_test, time_for_test)) + "\n")
         while True:
@@ -291,7 +302,7 @@ class HelpMyClassPlease:
             print("\033[1;34mheart beat\033[0m")
             now_weekday = now_time.tm_wday + 1
             now_time = now_time.tm_hour * 60 + now_time.tm_min
-            if use_test:  # 给定时间测试
+            if self.args.test[0] is not None:
                 self.sleep_time, now_weekday, now_time, time_for_test \
                     = sleep_time, weekday_for_test, time_for_test, time_for_test + 1
             print("now weekday: ", now_weekday, ", now time: ", now_time // 60, ":", ("%02d" % (now_time % 60)), sep="")
@@ -314,10 +325,10 @@ class HelpMyClassPlease:
             print()
 
 
+
+
 if __name__ == "__main__":
     hmcp = HelpMyClassPlease()
-    if len(sys.argv) > 1:
-        hmcp.init(sys.argv[1])
-    else:
-        hmcp.init("./class.json")
+    hmcp.parser()
+    hmcp.init()
     hmcp.run()
