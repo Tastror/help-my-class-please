@@ -82,13 +82,28 @@ def cv_detect_single(target: np.ndarray, template_img: np.ndarray) -> any:
     return max_loc, max_val
 
 
-def cv_click(template_src: str, width_rate=0.5, height_rate=0.5, *, threshold=None, log="", wait_time=0.5) -> int:
+def cv_detect_all_size(target: np.ndarray, template_img: np.ndarray) -> any:
+    res_val, res_loc = 0, None
+    for i in range(-5, 6):  # 75% ~ 125%，如果仍然不行可以自行调整范围
+        new_temp = cv.resize(template_img, None, fx=1+i/20, fy=1+i/20)
+        result: np.ndarray = cv.matchTemplate(target, new_temp, cv.TM_CCOEFF_NORMED)
+        min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
+        if max_val > res_val:
+            res_val, res_loc = max_val, max_loc
+    return res_loc, res_val
+
+
+def cv_click(template_src: str, width_rate=0.5, height_rate=0.5, *,
+             threshold=None, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
     template_src_path = "./src/" + template_src + ".png"
     temp = cv.imread(template_src_path)
     im = pag.screenshot()
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
-    click_point, max_val = cv_detect_single(cim, temp)
+    if all_size:
+        click_point, max_val = cv_detect_all_size(cim, temp)
+    else:
+        click_point, max_val = cv_detect_single(cim, temp)
     if threshold is not None and max_val < threshold:
         print_warning('图像点击：', log, ('未识别，识别度为 %.3f' % max_val), ('，要求达到 %.3f' % threshold), sep="")
         time.sleep(wait_time)
@@ -103,13 +118,16 @@ def cv_click(template_src: str, width_rate=0.5, height_rate=0.5, *, threshold=No
         return 2
 
 
-def cv_see(template_src: str, *, threshold=0.85, log="", wait_time=0.5) -> int:
+def cv_see(template_src: str, *, threshold=0.85, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
     template_src_path = "./src/" + template_src + ".png"
     temp = cv.imread(template_src_path)
     im = pag.screenshot()
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
-    click_point, max_val = cv_detect_single(cim, temp)
+    if all_size:
+        click_point, max_val = cv_detect_all_size(cim, temp)
+    else:
+        click_point, max_val = cv_detect_single(cim, temp)
     if threshold is not None and max_val < threshold:
         print_warning('图像检测：', log, ('未识别，识别度为 %.3f' % max_val), ('，要求达到 %.3f' % threshold), sep="")
         time.sleep(wait_time)
@@ -121,7 +139,7 @@ def cv_see(template_src: str, *, threshold=0.85, log="", wait_time=0.5) -> int:
         return 2
 
 
-def cv_compare(*template_src: str, log="", wait_time=0.5) -> int:
+def cv_compare(*template_src: str, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
     im = pag.screenshot()
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
@@ -129,8 +147,7 @@ def cv_compare(*template_src: str, log="", wait_time=0.5) -> int:
     for temp in template_src:
         template_src_path = "./src/" + temp + ".png"
         template_img = cv.imread(template_src_path)
-        result: np.ndarray = cv.matchTemplate(cim, template_img, cv.TM_CCOEFF_NORMED)
-        min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
+        max_loc, max_val = cv_detect_all_size(cim, template_img)
         ans.append(max_val)
     print_event('图像对比：', log, "对比列表 ", ans, sep="")
     time.sleep(wait_time)
@@ -196,7 +213,7 @@ class GoToClass:
             if meeting_id != "":
                 print_tip("正在打开腾讯会议窗口，请等待几秒")
                 if open_awake(None, "腾讯会议", self.path_dict.get('腾讯会议'), sep_time=5, wait_time=5) != 2:
-                    print_error("腾讯会议窗口打开失败！")
+                    print_warning("腾讯会议窗口可能打开失败")
                 print_tip("正在尝试加入会议")
                 if cv_see('add_meeting', log="加入会议") == 2:
                     rep = 0
