@@ -299,7 +299,7 @@ class GoToClass:
                     time.sleep(1)
                     print_warning("即将使用QQ登录课堂，请确保你的QQ在线")
                     rep = 0
-                    while cv_see("ke_qq_login", log="QQ快速登陆", wait_time=1) == 2 and rep < 20:
+                    while cv_see("ke_qq_login", log="QQ快速登陆", wait_time=1) != 2 and rep < 20:
                         time.sleep(1)
                         rep += 1
                     cv_click("ke_qq_login", 0.6, -0.6, log="QQ快速登陆")
