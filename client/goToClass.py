@@ -1,3 +1,4 @@
+import os
 import ssl
 import time
 import urllib3
@@ -94,7 +95,7 @@ def cv_detect_all_size(target: np.ndarray, template_img: np.ndarray) -> any:
 
 
 def cv_click(template_src: str, width_rate=0.5, height_rate=0.5, *,
-             threshold=None, log="", wait_time=0.5, all_size=True) -> int:
+             threshold=0.6, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
     template_src_path = "./src/" + template_src + ".png"
     temp = cv.imread(template_src_path)
@@ -133,7 +134,7 @@ def cv_see(template_src: str, *, threshold=0.85, log="", wait_time=0.5, all_size
         time.sleep(wait_time)
         return 3
     else:
-        print_event('图像检测：', log, ('识别成功，识别度为 %.3f' % max_val), ' [点击 ',
+        print_event('图像检测：', log, ('识别成功，识别度为 %.3f' % max_val), ' [检测点 ',
                     (click_point[0], click_point[1]), "]", sep="")
         time.sleep(wait_time)
         return 2
@@ -200,7 +201,10 @@ class GoToClass:
                 try:
                     print_tip("正在打开网页")
                     option = webdriver.ChromeOptions()
+                    os.environ['WDM_LOG_LEVEL'] = '0'
                     option.add_argument("--headless")
+                    option.add_argument('--log-level=3')
+                    option.add_argument("--disable-logging")
                     option.add_argument("--disable-notifications")
                     option.add_argument("--disable-popup-blocking")
                     browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=option)
@@ -215,26 +219,27 @@ class GoToClass:
                 if open_awake(None, "腾讯会议", self.path_dict.get('腾讯会议'), sep_time=5, wait_time=5) != 2:
                     print_warning("腾讯会议窗口可能打开失败")
                 print_tip("正在尝试加入会议")
-                if cv_see('add_meeting', log="加入会议") == 2:
-                    rep = 0
-                    while cv_see('connecting', log="链接中...", threshold=0.8) == 2 and rep < 20:
-                        time.sleep(0.5)
-                        rep += 1
-                    cv_click('add_meeting', log="加入会议", wait_time=1)
-                else:
+                if cv_see('add_meeting', log="加入会议") != 2:
                     print_tip("进入任务栏查找腾讯会议")
                     hotkey('win', 'tab', log="win + tab", wait_time=1.5)
-                    if cv_click('wemeet_tab', log="腾讯会议标志图", threshold=0.5, wait_time=1) != 2:
+                    if cv_click('wemeet_tab', log="腾讯会议标志图", wait_time=1) != 2:
                         cv_click('wemeet_tab2', log="腾讯会议标志图(2)", wait_time=1)
-                    rep = 0
-                    while cv_see('connecting', log="链接中...", threshold=0.8) == 2 and rep < 20:
-                        time.sleep(0.5)
-                        rep += 1
+                # 断网等待 1
+                rep = 0
+                while cv_see('wireless_board', log="无线投屏", threshold=0.85) != 2 and rep < 20:
+                    time.sleep(1)
+                    rep += 1
+                cv_click('add_meeting', log="加入会议", wait_time=1)
+                # 断网等待 2
+                rep = 0
+                while cv_see('meeting_id', log="会议号", threshold=0.85) != 2 and rep < 60:
+                    time.sleep(1)
+                    rep += 1
                     cv_click('add_meeting', log="加入会议", wait_time=1)
-                cv_click('meeting_id', 1, 2.2, log="会议号")
+                cv_click('meeting_id', 1, 2.5, log="会议号")
                 clear_paste(meeting_id, log="会议号")
                 if myname != "":
-                    if cv_click('your_name', 1, 2.2, log="您的名称") == 2:
+                    if cv_click('your_name', 1, 2.5, log="您的名称") == 2:
                         clear_paste(myname, log="您的名称")
                 if auto_close_audio:
                     if cv_compare("camera_closed", "camera_open", log="摄像头是否关闭") == 1:
@@ -284,14 +289,20 @@ class GoToClass:
                 try:
                     print_tip("正在打开网页")
                     option = webdriver.ChromeOptions()
+                    os.environ['WDM_LOG_LEVEL'] = '0'
+                    option.add_argument('--log-level=3')
+                    option.add_argument("--disable-logging")
                     option.add_argument("--disable-notifications")
                     option.add_argument("--disable-popup-blocking")
                     browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=option)
                     browser.get(url)
                     time.sleep(1)
-                    if cv_see("ke_qq_login", wait_time=1) == 2:
-                        print_warning("即将使用QQ登录课堂，请确保你的QQ在线")
-                        cv_click("ke_qq_login", 0.6, -0.6, log="使用QQ登录课堂")
+                    print_warning("即将使用QQ登录课堂，请确保你的QQ在线")
+                    rep = 0
+                    while cv_see("ke_qq_login", log="QQ快速登陆", wait_time=1) == 2 and rep < 20:
+                        time.sleep(1)
+                        rep += 1
+                    cv_click("ke_qq_login", 0.6, -0.6, log="QQ快速登陆")
                     reserve_browser_driver(browser)
                 except (ssl.SSLEOFError, urllib3.exceptions.MaxRetryError, requests.exceptions.SSLError):
                     print_error("网络错误，请检查 proxy 是否关闭")
