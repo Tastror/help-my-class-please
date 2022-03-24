@@ -3,6 +3,7 @@ import ssl
 import time
 import urllib3
 import requests
+import threading
 import cv2 as cv
 import numpy as np
 import pyperclip as pc
@@ -155,18 +156,44 @@ def cv_compare(*template_src: str, log="", wait_time=0.5, all_size=True) -> int:
     return ans.index(max(ans))
 
 
+def cv_qrcode_detect(*, log="", wait_time=0.0) -> int:
+    im = pag.screenshot()
+    cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2GRAY)
+    qrcode = cv.QRCodeDetector()
+    result_detection, transform, straight_qrcode = qrcode.detectAndDecode(cim)
+    if transform is not None:
+        folder = os.path.exists("img")
+        if not folder: os.mkdir("img")
+        print_event("二维码检测：检测到", log, "二维码，正在保存", sep="")
+        cv.imwrite("./img/" + str(time.time()) + ".png", cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR))
+        return 2
+    else:
+        print_event("二维码检测：未检测到", log, "二维码", sep="")
+        return 3
+
+
 class GoToClass:
     def __init__(self, path_dict):
         self.path_dict = path_dict
+        self.check_interval = 20
 
-    def sign_up(self, platform: str, lasting_minutes: int) -> None:
-        check_interval = 30
-        tick = lasting_minutes * 60 / check_interval
+    def sign_up(self, log: str, lasting_minutes: int) -> None:
+        tick = int(lasting_minutes * 60 / self.check_interval)
         while tick > 0:
             tick -= 1
-            print_tip("检查" + platform + "签到……")
-            # 等待书写 cv 的检测内容
-            time.sleep(check_interval)
+            time_use = time.time()
+            print_tip(log + "签到检查剩余", tick, "次")
+            cv_click("tencent_ketang_qiandao", log="签到按键")
+            time.sleep(self.check_interval - (time.time() - time_use))
+
+    def detect_qrcode(self, log: str, lasting_minutes: int) -> None:
+        tick = int(lasting_minutes * 60 / self.check_interval)
+        while tick > 0:
+            tick -= 1
+            time_use = time.time()
+            print_tip(log + "二维码检查剩余", tick, "次")
+            cv_qrcode_detect()
+            time.sleep(self.check_interval - (time.time() - time_use))
 
     def go_to_class(self, cla) -> int:
 
@@ -255,6 +282,7 @@ class GoToClass:
                     press("enter")
 
             print_tip("进入" + name + "课堂操作结束")
+            threading.Thread(target=self.detect_qrcode, args=("腾讯会议", time_lasting), daemon=True).start()
             return 2
 
         #
@@ -309,8 +337,8 @@ class GoToClass:
                     return 4
 
             print_tip("进入", name, "课堂操作结束")
-            # 签到，还未彻底完成
-            # threading.Thread(target=self.sign_up(), args=("腾讯课堂", time_lasting), daemon=True).start()
+            threading.Thread(target=self.sign_up, args=("腾讯课堂", time_lasting), daemon=True).start()
+            threading.Thread(target=self.detect_qrcode, args=("腾讯课堂", time_lasting), daemon=True).start()
             return 2
 
         #
