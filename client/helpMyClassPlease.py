@@ -49,12 +49,27 @@ class HelpMyClassPlease:
                           + str((sleep_time, weekday_for_test, time_for_test)) + "\n")
         while True:
             now_time = time.localtime(time.time())
+            now_weekday = now_time.tm_wday + 1
             if now_time.tm_mday != old_day:
                 old_day = now_time.tm_mday
-                self.today_list = [i for i in range(len(self.config))]
-                print("\033[1;36ma new day begins\033[0m")
-            print("\033[1;34mheart beat\033[0m")
-            now_weekday = now_time.tm_wday + 1
+                self.today_list = []
+                print("\033[1;36mA new day begins.\033[0m")
+                for i in range(len(self.config)):
+                    if now_weekday in self.config[i].setdefault("weekday", [0]):
+                        self.today_list.append(i)
+                if len(self.today_list) == 0:
+                    print("今天没课啦！")
+                else:
+                    print("今天的课程有：")
+                    for i in self.today_list:
+                        print("课程名称：", self.config[i].setdefault("name", "<名称未知>"),
+                              "　上课周：", self.config[i].get("weekday"),
+                              "　上课时间：", self.config[i].setdefault("time", "0:0"),
+                              "　课程时长：", self.config[i].setdefault("time_lasting", 100),
+                              "min　进入时间范围：", self.config[i].setdefault("time_range", [-10, 15]), sep="")
+
+            print()
+            print("\033[1;34mheart-beat\033[0m")
             now_time = now_time.tm_hour * 60 + now_time.tm_min
             if self.args.test[0] is not None:
                 self.sleep_time, now_weekday, now_time, time_for_test \
@@ -62,21 +77,19 @@ class HelpMyClassPlease:
             print("now weekday: ", now_weekday, ", now time: ", now_time // 60, ":", ("%02d" % (now_time % 60)), sep="")
             run_id_list = []
             for i in self.today_list.copy():
-                start_time = re.split("[:：.]", self.config[i].get("time", "0:0"))
-                start_weekday = self.config[i].get("weekday", [0])
-                time_range = self.config[i].get("time_range", [-10, 10])
+                start_time = re.split("[:：.]", self.config[i].get("time"))
+                time_range = self.config[i].get("time_range")
                 pre_time = int(start_time[0]) * 60 + int(start_time[1])
                 # print("id:", i, "weekday:", start_weekday, "time:", pre_time, "time_range:", time_range)
-                if now_weekday in start_weekday and time_range[0] <= (now_time - pre_time) <= time_range[1]:
-                    print("[class chosen] id: ", i, ", weekday: ", start_weekday,
-                          ", time: ", pre_time // 60, ":", ("%02d" % (pre_time % 60)), sep="")
+                if time_range[0] <= (now_time - pre_time) <= time_range[1]:
+                    print("[课程选定] 名称: ", self.config[i].get("name"),
+                          ", 时间: ", pre_time // 60, ":", ("%02d" % (pre_time % 60)), sep="")
                     run_id_list.append(i)
                     self.today_list.remove(i)
             for i in run_id_list:
                 lck_threads.create(target=self.gtc.go_to_class, args=(self.config[i],), daemon=True)
             lck_threads.start_all()
             time.sleep(self.sleep_time)
-            print()
 
 
 if __name__ == "__main__":

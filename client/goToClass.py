@@ -168,7 +168,7 @@ def cv_qrcode_detect(*, log="", wait_time=0.0) -> int:
         cv.imwrite("./img/" + str(time.time()) + ".png", cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR))
         return 2
     else:
-        print_event("二维码检测：未检测到", log, "二维码", sep="")
+        print_warning("二维码检测：未检测到", log, "二维码", sep="")
         return 3
 
 
@@ -197,10 +197,10 @@ class GoToClass:
 
     def go_to_class(self, cla) -> int:
 
-        name = cla.get("name", "<名称未知>")
-        platform = cla.get("platform", "")
-        detail = cla.get("detail", {})
-        time_lasting = cla.get("time_lasting", 100)
+        name = cla.get("name")
+        time_lasting = cla.get("time_lasting")
+        platform = cla.setdefault("platform", "")
+        detail = cla.setdefault("detail", {})
 
         print()
         print_tip("正在唤醒，请等待几秒")
@@ -214,11 +214,11 @@ class GoToClass:
         #
         if platform == "腾讯会议":
 
-            url = detail.get("url", "")
-            meeting_id = detail.get("id", "")
-            passwd = detail.get("passwd", "")
-            myname = detail.get("myname", "")
-            auto_close_audio = detail.get("auto_close_audio", True)
+            url = detail.setdefault("url", "")
+            meeting_id = detail.setdefault("id", "")
+            passwd = detail.setdefault("passwd", "")
+            myname = detail.setdefault("myname", "")
+            auto_close_audio = detail.setdefault("auto_close_audio", True)
 
             if meeting_id == "" and url == "":
                 print_error("加入会议失败：没有网址或会议号")
@@ -293,8 +293,8 @@ class GoToClass:
         #
         elif platform == "腾讯课堂":
 
-            using = detail.get("using", "url")
-            url = detail.get("url", "")
+            using = detail.setdefault("using", "url")
+            url = detail.setdefault("url", "")
 
             if using != "client" and using != "url":
                 print_warning("加入方式 using（网页或客户端）指定有误，正在调整")
