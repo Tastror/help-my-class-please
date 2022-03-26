@@ -141,6 +141,37 @@ def cv_see(template_src: str, *, threshold=0.85, log="", wait_time=0.5, all_size
         return 2
 
 
+def cv_click_list(*template_src: str, width_rate=0.5, height_rate=0.5,
+                  threshold=0.6, log="", wait_time=0.5, all_size=True) -> int:
+    if log != "": log = '"' + log + '" '
+    im = pag.screenshot()
+    cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
+    temp_n, click_point_n, max_val_n = None, [0, 0], 0
+    for temp in template_src:
+        template_src_path = "./src/" + temp + ".png"
+        temp = cv.imread(template_src_path)
+        if all_size:
+            click_point, max_val = cv_detect_all_size(cim, temp)
+        else:
+            click_point, max_val = cv_detect_single(cim, temp)
+        if max_val > max_val_n:
+            temp_n = temp
+            click_point_n = click_point
+            max_val_n = max_val
+    if threshold is not None and max_val_n < threshold:
+        print_warning('图像列点击：', log, ('未识别，最高识别度为 %.3f' % max_val_n), ('，要求达到 %.3f' % threshold), sep="")
+        time.sleep(wait_time)
+        return 3
+    else:
+        w_bias = int(temp_n.shape[1] * width_rate)
+        h_bias = int(temp_n.shape[0] * height_rate)
+        print_event('图像列点击：', log, ('识别成功，最高识别度为 %.3f' % max_val_n), ' [点击 ',
+                    (click_point_n[0] + w_bias, click_point_n[1] + h_bias), "]", sep="")
+        pag.click(click_point_n[0] + w_bias, click_point_n[1] + h_bias)
+        time.sleep(wait_time)
+        return 2
+
+
 def cv_compare(*template_src: str, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
     im = pag.screenshot()
@@ -183,7 +214,7 @@ class GoToClass:
             tick -= 1
             time_use = time.time()
             print_tip(log + "签到检查剩余", tick, "次")
-            cv_click("tencent_ketang_qiandao", log="签到按键")
+            cv_click_list("tencent_ketang_qiandao", "tencent_ketang_qiandao_2", log="签到按键")
             time.sleep(self.check_interval - (time.time() - time_use))
 
     def detect_qrcode(self, log: str, lasting_minutes: int) -> None:
