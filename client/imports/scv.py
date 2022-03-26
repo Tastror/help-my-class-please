@@ -6,8 +6,14 @@ import numpy as np
 from imports import sprint, spag
 
 
-def get_path(path_section: str) -> str:
+def _get_img_path(path_section: str) -> str:
     return "./img/" + path_section + ".png"
+
+
+def _get_qrcode_path(path_section: str) -> str:
+    folder = os.path.exists("qrcodes")
+    if not folder: os.mkdir("qrcodes")
+    return "./qrcodes/" + path_section + ".png"
 
 
 def detect_single(target: np.ndarray, template_img: np.ndarray) -> any:
@@ -30,7 +36,7 @@ def detect_all_size(target: np.ndarray, template_img: np.ndarray) -> any:
 def click(template_src: str, width_rate=0.5, height_rate=0.5, *,
           threshold=0.6, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
-    template_src_path = get_path(template_src)
+    template_src_path = _get_img_path(template_src)
     temp = cv.imread(template_src_path)
     im = spag.screenshot()
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
@@ -54,7 +60,7 @@ def click(template_src: str, width_rate=0.5, height_rate=0.5, *,
 
 def see(template_src: str, *, threshold=0.85, log="", wait_time=0.5, all_size=True) -> int:
     if log != "": log = '"' + log + '" '
-    template_src_path = get_path(template_src)
+    template_src_path = _get_img_path(template_src)
     temp = cv.imread(template_src_path)
     im = spag.screenshot()
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
@@ -80,7 +86,7 @@ def click_list(*template_src: str, width_rate=0.5, height_rate=0.5,
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
     temp_n, click_point_n, max_val_n = None, [0, 0], 0
     for temp in template_src:
-        template_src_path = get_path(temp)
+        template_src_path = _get_img_path(temp)
         temp = cv.imread(template_src_path)
         if all_size:
             click_point, max_val = detect_all_size(cim, temp)
@@ -110,7 +116,7 @@ def compare(*template_src: str, log="", wait_time=0.5, all_size=True) -> int:
     cim = cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR)
     ans = []
     for temp in template_src:
-        template_src_path = get_path(temp)
+        template_src_path = _get_img_path(temp)
         template_img = cv.imread(template_src_path)
         max_loc, max_val = detect_all_size(cim, template_img)
         ans.append(max_val)
@@ -125,10 +131,8 @@ def qrcode_detect(*, log="", wait_time=0.0) -> int:
     qrcode = cv.QRCodeDetector()
     result_detection, transform, straight_qrcode = qrcode.detectAndDecode(cim)
     if transform is not None:
-        folder = os.path.exists("img")
-        if not folder: os.mkdir("img")
         sprint.event("二维码检测：检测到", log, "二维码，正在保存", sep="")
-        cv.imwrite("./img/" + str(time.time()) + ".png", cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR))
+        cv.imwrite(_get_qrcode_path(str(time.time())), cv.cvtColor(np.array(im), cv.COLOR_RGB2BGR))
         return 2
     else:
         sprint.warning("二维码检测：未检测到", log, "二维码", sep="")
