@@ -3,8 +3,9 @@ import ast
 import json
 import time
 import argparse
-from lockThreads import lock_threads
-from goToClass import GoToClass, print_warning
+
+from goToClass import GoToClass
+from imports.sthread import lock_threads
 
 
 class HelpMyClassPlease:
@@ -45,8 +46,8 @@ class HelpMyClassPlease:
         lck_threads = lock_threads()
         if self.args.test[0] is not None:
             sleep_time, weekday_for_test, time_for_test = self.args.test[0], self.args.test[1], self.args.test[2]
-            print_warning("Attention: 当前为测试用例，时间流速与平常会有差异。测试参数 "
-                          + str((sleep_time, weekday_for_test, time_for_test)) + "\n")
+            print("\033[1;33mAttention: 当前为测试用例，时间流速与平常会有差异。测试参数 "
+                  + str((sleep_time, weekday_for_test, time_for_test)) + "\033[0m\n")
         while True:
             now_time = time.localtime(time.time())
             now_weekday = now_time.tm_wday + 1
