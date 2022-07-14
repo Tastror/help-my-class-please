@@ -94,7 +94,7 @@ class GoToClass:
                         scv.click('wemeet_tab2', log="腾讯会议标志图(2)", wait_time=1)
                 # 断网等待 1
                 rep = 0
-                while scv.see('wireless_board', log="无线投屏", threshold=0.85) != 2 and rep < 20:
+                while scv.see('wireless_board', log="共享屏幕", threshold=0.85) != 2 and rep < 20:
                     time.sleep(1)
                     rep += 1
                 scv.click('add_meeting', log="加入会议", wait_time=1)
