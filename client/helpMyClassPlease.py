@@ -15,7 +15,6 @@ class HelpMyClassPlease:
         self.path = {}
         self.config = []
         self.today_list = []
-        self.sleep_time = 60
 
     def parser(self):
         parser = argparse.ArgumentParser("help my class please")
@@ -42,17 +41,28 @@ class HelpMyClassPlease:
             print("\033[1;32m课程已从", self.args.json, "中导入\033[0m")
 
     def run(self) -> None:
-        old_day = 0
+
+        old_day = -1
         lck_threads = lock_threads()
+
         if self.args.test[0] is not None:
             sleep_time, weekday_for_test, time_for_test = self.args.test[0], self.args.test[1], self.args.test[2]
-            print("\033[1;33mAttention: 当前为测试用例，时间流速与平常会有差异。测试参数 "
+            print("\033[1;33mAttention: 当前为测试用例，时间流速与平常会有差异。测试参数 (每秒时长, 当前星期, 当前经过的分钟数) = "
                   + str((sleep_time, weekday_for_test, time_for_test)) + "\033[0m\n")
+
         while True:
             now_time = time.localtime(time.time())
             now_weekday = now_time.tm_wday + 1
-            if now_time.tm_mday != old_day:
-                old_day = now_time.tm_mday
+            loop_sleep_time = 60 - now_time.tm_sec
+            now_time = now_time.tm_hour * 60 + now_time.tm_min
+
+            # test change
+            if self.args.test[0] is not None:
+                loop_sleep_time, now_weekday, now_time, time_for_test \
+                    = sleep_time, weekday_for_test, time_for_test, time_for_test + 1
+
+            if now_weekday - 1 != old_day:
+                old_day = now_weekday - 1
                 self.today_list = []
                 print("\033[1;36mA new day begins.\033[0m")
                 for i in range(len(self.config)):
@@ -71,10 +81,6 @@ class HelpMyClassPlease:
 
             print()
             print("\033[1;34mheart-beat\033[0m")
-            now_time = now_time.tm_hour * 60 + now_time.tm_min
-            if self.args.test[0] is not None:
-                self.sleep_time, now_weekday, now_time, time_for_test \
-                    = sleep_time, weekday_for_test, time_for_test, time_for_test + 1
             print("now weekday: ", now_weekday, ", now time: ", now_time // 60, ":", ("%02d" % (now_time % 60)), sep="")
             run_id_list = []
             for i in self.today_list.copy():
@@ -90,7 +96,8 @@ class HelpMyClassPlease:
             for i in run_id_list:
                 lck_threads.create(target=self.gtc.go_to_class, args=(self.config[i],), daemon=True)
             lck_threads.start_all()
-            time.sleep(self.sleep_time)
+
+            time.sleep(loop_sleep_time)
 
 
 if __name__ == "__main__":

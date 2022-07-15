@@ -85,7 +85,8 @@ class GoToClass:
             if meeting_id != "":
                 sprint.tip("正在打开腾讯会议窗口，请等待几秒")
                 if open_awake(None, "腾讯会议", self.path_dict.get('腾讯会议'), sep_time=5, wait_time=5) != 2:
-                    sprint.warning("腾讯会议窗口可能打开失败")
+                    sprint.error("腾讯会议窗口打开失败")
+                    return 3
                 sprint.tip("正在尝试加入会议")
                 if scv.see('add_meeting', log="加入会议") != 2:
                     sprint.tip("进入任务栏查找腾讯会议")
@@ -94,13 +95,13 @@ class GoToClass:
                         scv.click('wemeet_tab2', log="腾讯会议标志图(2)", wait_time=1)
                 # 断网等待 1
                 rep = 0
-                while scv.see('wireless_board', log="共享屏幕", threshold=0.85) != 2 and rep < 20:
+                while scv.see('wireless_board', log="共享屏幕", threshold=0.85) != 2 and rep < 10:
                     time.sleep(1)
                     rep += 1
                 scv.click('add_meeting', log="加入会议", wait_time=1)
                 # 断网等待 2
                 rep = 0
-                while scv.see('meeting_id', log="会议号", threshold=0.85) != 2 and rep < 60:
+                while scv.see('meeting_id', log="会议号", threshold=0.85) != 2 and rep < 10:
                     time.sleep(1)
                     rep += 1
                     scv.click('add_meeting', log="加入会议", wait_time=1)
@@ -149,7 +150,7 @@ class GoToClass:
             if using == "client":
                 sprint.tip("正在打开客户端")
                 if open_awake(None, "登录", self.path_dict.get('腾讯课堂'), sep_time=4, wait_time=2) != 2:
-                    sprint.error("腾讯课堂窗口打开失败！")
+                    sprint.error("腾讯课堂窗口打开失败")
                     return 3
                 if scv.see("quick_login", log="快速登录", threshold=0.8) == 2:
                     scv.click("quick_login", log="快速登录", wait_time=2)
@@ -168,7 +169,7 @@ class GoToClass:
                     time.sleep(1)
                     sprint.warning("即将使用QQ登录课堂，请确保你的QQ在线")
                     rep = 0
-                    while scv.see("ke_qq_login", log="QQ快速登陆", wait_time=1) != 2 and rep < 20:
+                    while scv.see("ke_qq_login", log="QQ快速登陆", wait_time=1) != 2 and rep < 10:
                         time.sleep(1)
                         rep += 1
                     scv.click("ke_qq_login", 0.6, -0.6, log="QQ快速登陆")
