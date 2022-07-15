@@ -85,8 +85,7 @@ class GoToClass:
             if meeting_id != "":
                 sprint.tip("正在打开腾讯会议窗口，请等待几秒")
                 if open_awake(None, "腾讯会议", self.path_dict.get('腾讯会议'), sep_time=5, wait_time=5) != 2:
-                    sprint.error("腾讯会议窗口打开失败")
-                    return 3
+                    sprint.warning("腾讯会议窗口可能打开失败")
                 sprint.tip("正在尝试加入会议")
                 if scv.see('add_meeting', log="加入会议") != 2:
                     sprint.tip("进入任务栏查找腾讯会议")
