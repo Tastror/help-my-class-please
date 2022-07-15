@@ -115,7 +115,7 @@ class GoToClass:
                     if scv.compare("microphone_closed", "microphone_open", log="麦克风是否关闭") == 1:
                         scv.click("microphone_open", width_rate=0.1, log="麦克风关闭键", wait_time=0.5)
                 scv.click("add_meeting_bar", log="加入会议", wait_time=4)
-                if scv.see("passwd", log="入会密码") == 2:
+                if scv.see("passwd", log="入会密码", threshold=0.75) == 2:
                     if passwd == "":
                         sprint.warning("加入会议可能不成功：未指定入会密码")
                     else:
