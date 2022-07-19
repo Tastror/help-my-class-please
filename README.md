@@ -1,4 +1,8 @@
-# help-my-class-please 网课自动登录
+# help-my-class-please
+
+网课自动登录
+
+
 
 
 ### 简介
@@ -15,13 +19,19 @@
 
 ### 使用方式
 
-- 进入`client`目录
+- 进入`client`目录．
 
   ```shell
   cd client
   ```
 
-- 安装依赖项．
+- 安装依赖项（建议使用虚拟环境，否则很容易在更新后产生版本冲突），以 conda 为例．
+
+  ```shell
+  conda create -n class_env python=3.9
+  conda activate class_env
+  pip install -r requirements.txt  # conda install --file requirements.txt
+  ```
 
 - 仿照样例配置好 class.json．
 
@@ -75,10 +85,10 @@
   如果要自行使用参数（如重新指定 class.json 路径、启动测试时间），可以使用
   
   ```shell
-  python3 ./helpMyClassPlease.py --json "../../myclass.json"
-                               # -j "../../myclass.json"
-  python3 ./helpMyClassPlease.py --test "[10, 2, 499]"
-                               # -t "10, 2, 499"
+  python3 ./helpMyClassPlease.py -j "../../myclass.json"
+                               # or use: --json "../../myclass.json"
+  python3 ./helpMyClassPlease.py -t "[10, 2, 499]"
+                               # or use: --test "[10, 2, 499]"
   ```
   
   其中测试时间的三个值分别为：每分钟的秒数、当前星期、当前距离 0:00 的分钟数．
@@ -93,7 +103,7 @@ class.json 给了一份测试文件，任何时候都会触发登录，可以先
 
 目前代码还很简单，大家可以根据需求自行修改．
 
-腾讯课堂目前只能采用网页版本（因为客户端识别还没整完），之后会支持客户端的
+腾讯课堂目前只能采用网页版本（因为客户端识别还没整完），之后会支持客户端的．
 
 待办
 
