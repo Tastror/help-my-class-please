@@ -21,7 +21,7 @@ class HelpMyClassPlease:
         parser.add_argument('-t', '--test', nargs='?', type=str, const='[10, 1, 499]', default='[None]',
                             help="use a test time to run, you can change it by adding list of 3 int: [seconds pre "
                                  "minute, now weekday, now time]")
-        parser.add_argument('-j', '--json', type=str, default="./class.json",
+        parser.add_argument('-j', '--json', type=str, default="../config/class.json",
                             help="add your class.json path")
         self.args = parser.parse_args()
         self.args.test = ast.literal_eval(self.args.test)

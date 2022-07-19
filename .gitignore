@@ -1,2 +1,5 @@
 .idea
 __pycache__
+/config/
+!/config/class.json
+!/config/class-shortcut.bat

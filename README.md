@@ -33,6 +33,12 @@
   pip install -r requirements.txt  # conda install --file requirements.txt
   ```
 
+- 进入 `config` 目录．
+
+  ```shell
+  cd ..\config
+  ```
+  
 - 仿照样例配置好 class.json．
 
   ```
@@ -74,10 +80,10 @@
   ]
   ```
 
-- 在该目录下
+- 尝试运行 `helpMyClassPlease.py`．
 
   ```shell
-  python3 ./helpMyClassPlease.py
+  python ..\client\helpMyClassPlease.py
   ```
   
   即可运行．如果要一直运行，需要后台常开且不能进入睡眠模式．
@@ -85,15 +91,37 @@
   如果要自行使用参数（如重新指定 class.json 路径、启动测试时间），可以使用
   
   ```shell
-  python3 ./helpMyClassPlease.py -j "../../myclass.json"
-                               # or use: --json "../../myclass.json"
-  python3 ./helpMyClassPlease.py -t "[10, 2, 499]"
+  python ..\client\helpMyClassPlease.py -j "..\..\myclass.json"
+                               # or use: --json "..\..\myclass.json"
+  python ..\client\helpMyClassPlease.py -t "[10, 2, 499]"
                                # or use: --test "[10, 2, 499]"
   ```
   
   其中测试时间的三个值分别为：每分钟的秒数、当前星期、当前距离 0:00 的分钟数．
   
   这两个参数可以同时添加．
+  
+  尝试运行成功后退出，回到原来的 config 文件夹．
+  
+- 用编辑器打开 `class-shortcut.bat`，照着注释修改．
+
+  ```shell
+  @echo off
+  
+  rem : this is your disk name where client directory is in
+  F:
+  
+  rem : [YOUR-PATH] is your path to client directory
+  cd "\[YOUR-PATH]\help-my-class-please\client"
+  
+  rem : [class] is your python environment
+  call conda activate [class]
+  
+  rem : [myclass.json] is your class.json
+  python .\helpMyClassPlease.py -j "..\config\[myclass.json]"
+  ```
+
+- 之后，只需双击运行 `class-shortcut.bat` 即可．
 
 
 
