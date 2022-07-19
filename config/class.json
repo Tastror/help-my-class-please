@@ -1,0 +1,36 @@
+[
+    {
+        "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",
+        "腾讯课堂": "C:/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"
+    },
+    [
+        {
+            "name": "泡面的艺术",
+            "platform": "腾讯会议",
+            "detail": {
+                "url": "",
+                "id": "938-9491-0462",
+                "passwd": "114514",
+                "myname": "3141592653-张三",
+                "auto_close_audio": true
+            },
+            "weekday": [1, 2, 3, 4, 5, 6,  7],
+            "time": "20:30",
+            "time_range": [-99999, 99999],
+            "time_lasting": 15
+        },
+        {
+            "name": "睡大觉",
+            "platform": "腾讯课堂",
+            "detail": {
+                "using": "url",
+                "url": "https://ke.qq.com/webcourse/1234567/123456789#taid=12345678901234567&lite=1",
+                "name": "睡大觉"
+            },
+            "weekday": [1, 2, 3, 4, 5, 6, 7],
+            "time": "10:30",
+            "time_range": [-99999, 99999],
+            "time_lasting": 30
+        }
+    ]
+]
