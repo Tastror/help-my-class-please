@@ -1,6 +1,7 @@
 .idea
 __pycache__
 
+/data
 /config/*
 !/config/class.json
 !/config/class-shortcut.bat

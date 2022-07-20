@@ -11,9 +11,11 @@ def _get_img_path(path_section: str) -> str:
 
 
 def _get_qrcode_path(path_section: str) -> str:
-    folder = os.path.exists("qrcodes")
-    if not folder: os.mkdir("qrcodes")
-    return "./qrcodes/" + path_section + ".png"
+    folder = os.path.exists("../data")
+    if not folder: os.mkdir("../data")
+    folder = os.path.exists("../data/qrcodes")
+    if not folder: os.mkdir("../data/qrcodes")
+    return "../data/qrcodes/" + path_section + ".png"
 
 
 def detect_single(target: np.ndarray, template_img: np.ndarray) -> any:
