@@ -95,8 +95,8 @@
   如果要自行使用参数（如重新指定 class.json 路径、启动测试时间），可以使用
   
   ```shell
-  python ..\client\helpMyClassPlease.py -j "..\..\myclass.json"
-                               # or use: --json "..\..\myclass.json"
+  python ..\client\helpMyClassPlease.py -j "class.json"
+                               # or use: --json "class.json"
   python ..\client\helpMyClassPlease.py -t "[10, 2, 499]"
                                # or use: --test "[10, 2, 499]"
   ```
