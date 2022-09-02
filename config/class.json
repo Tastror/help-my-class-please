@@ -1,9 +1,9 @@
-[
-    {
+{
+    "path": {
         "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",
         "腾讯课堂": "C:/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"
     },
-    [
+    "class": [
         {
             "name": "泡面的艺术",
             "platform": "腾讯会议",
@@ -33,4 +33,4 @@
             "time_lasting": 30
         }
     ]
-]
+}

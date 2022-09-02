@@ -46,12 +46,12 @@
 - 仿照样例配置好 class.json．
 
   ```
-  [
   {
+  "path": {
       "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",     // 你的安装路径
       "腾讯课堂": "C:/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"
   },
-  [
+  "class": [
       {
           "name": "泡面的艺术",                // 课程名称
           "platform": "腾讯会议",              // 平台（目前支持腾讯会议和腾讯课堂）
@@ -81,7 +81,7 @@
           "time_lasting": 30
       }
   ]
-  ]
+  }
   ```
 
 - 尝试运行 `helpMyClassPlease.py`．

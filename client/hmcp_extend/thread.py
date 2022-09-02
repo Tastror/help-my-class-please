@@ -20,7 +20,7 @@ def series_func(func_list: list) -> None:
     return
 
 
-class lock_threads:
+class LockThreads:
     def __init__(self) -> None:
         self.busy = False
         self.working = None
