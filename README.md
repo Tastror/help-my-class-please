@@ -1,51 +1,45 @@
-# help-my-class-please
+# HMCP (help-my-class-please)
 
-网课自动登录
+## 简介
 
+用于自动化网课登录的 python 程序。
 
+支持软件：腾讯会议、腾讯课堂。  
+支持平台：windows7 及以上。
 
-
-### 简介
-
-腾讯会议、腾讯课堂的自动化登录的 python 程序．
-
-
-### 演示
+## 演示
 
 ![demo](img/demo.png)
 
+## 运行方式
 
-### 环境与平台
+1. 建立虚拟环境并安装依赖项，以 `conda`、环境命名为 `class` 为例。
 
-由于使用了大量快捷键和屏幕识别，目前仅支持 windows7 及以上的平台．
+   ```shell
+   conda create -n class python=3.9
+   conda activate class
+   pip install -r requirements.txt
+   # or you can use: conda install --file requirements.txt
+   ```
 
+2. 进入 `config` 目录。
 
+3. 运行（或双击）`make-shortcut.bat`。
 
-### 使用方式
+   > 这一步会在桌面生成 `HMCP.lnk` 链接，指向 `my-class-shortcut.bat`。  
+   > `my-class-shortcut.bat` 会使用 `my-class.json` 作为课程配置，见下。
 
-- 进入`client`目录．
+4. 双击桌面的 `HMCP`，看看是否能成功运行。
 
-  ```shell
-  cd client
-  ```
+   > 如果你没有使用 conda、使用的 conda 环境不叫 class、使用了别的 . json，请自行修改 `my-class-shortcut.bat`。
 
-- 安装依赖项（建议使用虚拟环境，否则很容易在更新后产生版本冲突），以 conda 为例．
+5. 如果要一直运行，需要后台常开且电脑不能进入睡眠模式。
 
-  ```shell
-  conda create -n class_env python=3.9
-  conda activate class_env
-  pip install -r requirements.txt  # conda install --file requirements.txt
-  ```
+## 配置方式
 
-- 进入 `config` 目录．
+- 仅需配置 `my-class.json`
 
-  ```shell
-  cd ..\config
-  ```
-  
-- 仿照样例配置好 class.json．
-
-  ```
+  ```json
   {
   "path": {
       "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",     // 你的安装路径
@@ -84,13 +78,13 @@
   }
   ```
 
-- 尝试运行 `helpMyClassPlease.py`．
+## 开发者调试
+
+- 通常直接运行 `helpMyClassPlease.py`。
 
   ```shell
   python ..\client\helpMyClassPlease.py
   ```
-  
-  即可运行．如果要一直运行，需要后台常开且不能进入睡眠模式．
   
   如果要自行使用参数（如重新指定 class.json 路径、启动测试时间），可以使用
   
@@ -101,45 +95,11 @@
                                # or use: --test "[10, 2, 499]"
   ```
   
-  其中测试时间的三个值分别为：每分钟的秒数、当前星期、当前距离 0:00 的分钟数．
-  
-  这两个参数可以同时添加．
-  
-  尝试运行成功后退出，回到原来的 config 文件夹．
-  
-- 用编辑器打开 `class-shortcut.bat`，照着注释修改．
+  其中测试时间的三个值分别为：每分钟的秒数、当前星期、当前距离 0:00 的分钟数。这两个参数可以同时添加。
 
-  ```shell
-  @echo off
-  
-  rem : this is your disk name where client directory is in
-  F:
-  
-  rem : [YOUR-PATH] is your path to client directory
-  cd "\[YOUR-PATH]\help-my-class-please\client"
-  
-  rem : [class] is your python environment
-  call conda activate [class]
-  
-  rem : [myclass.json] is your class.json
-  python .\helpMyClassPlease.py -j "..\config\[myclass.json]"
-  ```
+## 待办
 
-- 之后，只需双击运行 `class-shortcut.bat` 即可．
-
-
-
-### 其他
-
-class.json 给了一份测试文件，任何时候都会触发登录，可以先看看能不能跑．
-
-目前代码还很简单，大家可以根据需求自行修改．
-
-img 文件夹提供了图标，可以创建快捷方式使用．
-
-腾讯课堂目前只能采用网页版本（因为客户端识别还没整完），之后会支持客户端的．
-
-待办
+腾讯课堂目前只能采用网页版本
 
 - [x] 提供自选命令行参数
 - [x] 架构重构
@@ -147,3 +107,4 @@ img 文件夹提供了图标，可以创建快捷方式使用．
 - [ ] 客户端和网页版自主选择
 - [x] 腾讯课堂自动签到
 - [ ] 其他网课软件的支持
+- [ ] 不需要常开也能运行（或者自动阻止睡眠模式）
