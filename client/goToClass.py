@@ -172,7 +172,7 @@ class GoToClass:
                     he.view.click("ke_qq_login", 0.6, -0.6, log="QQ快速登陆")
                     he.thread.reserve_browser_driver(browser)
                 except (ssl.SSLEOFError, urllib3.exceptions.MaxRetryError, requests.exceptions.SSLError):
-                    he.log.error("网络错误，请检查 proxy 是否关闭")
+                    he.log.error("网络错误，请检查您的网络是否存在问题")
                     return 4
 
             he.log.tip("进入", name, "课堂操作结束")
