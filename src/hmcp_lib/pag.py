@@ -1,7 +1,7 @@
 import time
 import pyperclip as pc
 import pyautogui as pag
-import hmcp_extend as he
+import hmcp_lib as he
 
 
 def press(key: str, *, log="", wait_time=0.5) -> None:

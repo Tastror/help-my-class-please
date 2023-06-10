@@ -4,9 +4,9 @@ import json
 import time
 import argparse
 
-from hmcp_extend import log
+from hmcp_lib import log
 from goToClass import GoToClass
-from hmcp_extend.thread import LockThreads
+from hmcp_lib.thread import LockThreads
 
 
 class HelpMyClassPlease:

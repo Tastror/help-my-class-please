@@ -2,19 +2,19 @@ import os
 import time
 import cv2 as cv
 import numpy as np
-import hmcp_extend as he
+import hmcp_lib as he
 
 
 def _get_img_path(path_section: str) -> str:
-    return "./img/" + path_section + ".png"
+    return "../resource/img/" + path_section + ".png"
 
 
 def _get_qrcode_path(path_section: str) -> str:
-    folder = os.path.exists("../data")
-    if not folder: os.mkdir("../data")
-    folder = os.path.exists("../data/qrcodes")
-    if not folder: os.mkdir("../data/qrcodes")
-    return "../data/qrcodes/" + path_section + ".png"
+    folder = os.path.exists("../user-data")
+    if not folder: os.mkdir("../user-data")
+    folder = os.path.exists("../user-data/qrcodes")
+    if not folder: os.mkdir("../user-data/qrcodes")
+    return "../user-data/qrcodes/" + path_section + ".png"
 
 
 def detect_single(target: np.ndarray, template_img: np.ndarray) -> any:

@@ -6,12 +6,15 @@ if not "%pwd:~-1,1%"=="\" set pwd=%pwd%\
 for /f "tokens=2*" %%a in ('reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" /v Desktop') do set desktopPath=%%b
 if not "%desktopPath:~-1,1%"=="\" set desktopPath=%desktopPath%\
 
+mkdir "%pwd%user-config"
+
 set linkFilePath=%desktopPath%HMCP.lnk
-set targetFilePath_original=%pwd%config\run-hmcp.bat
-set targetFilePath=%pwd%config\my-run-hmcp.bat
-set jsonFilePath_original=%pwd%config\class.json
-set jsonFilePath=%pwd%config\my-class.json
-set iconFilePath=%pwd%img\ico.ico
+set iconFilePath=%pwd%resource\ico\normal.ico
+
+set targetFilePath_original=%pwd%resource\config\run-hmcp.bat
+set targetFilePath=%pwd%user-config\run-hmcp.bat
+set jsonFilePath_original=%pwd%resource\config\class.json
+set jsonFilePath=%pwd%user-config\class.json
 
 set vbsFilePath=%pwd%tmp.vbs
 

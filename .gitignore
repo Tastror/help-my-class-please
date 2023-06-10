@@ -1,11 +1,8 @@
 .idea
 __pycache__
 
-/data
-/config/*
-!/config/class.json
-!/config/run-hmcp.bat
-!/config/make-shortcut.bat
+/user-data
+/user-config
 
 class.log
 class.log.*
