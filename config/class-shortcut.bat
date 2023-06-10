@@ -1,10 +1,7 @@
 @echo off
 
-rem : this is your disk name where client directory is in
-F:
-
-rem : [YOUR-PATH] is your path to client directory
-cd "\[YOUR-PATH]\help-my-class-please\client"
+cd /d "%~dp0"
+cd "../client"
 
 rem : [class] is your python environment
 call conda activate [class]
