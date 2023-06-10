@@ -3,8 +3,8 @@
 cd /d "%~dp0"
 cd "../client"
 
-rem : [class] is your python environment
-call conda activate [class]
+@REM "class" is your python environment, you may need to change it
+call conda activate class
 
-rem : [myclass.json] is your class.json
-python .\helpMyClassPlease.py -j "..\config\[myclass.json]"
+@REM "class.json" is your class.json, you must modify it !!!
+python .\helpMyClassPlease.py -j "..\config\class.json"

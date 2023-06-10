@@ -5,6 +5,7 @@ __pycache__
 /config/*
 !/config/class.json
 !/config/class-shortcut.bat
+!/config/make-shortcut.bat
 
 class.log
 class.log.*
