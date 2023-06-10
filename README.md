@@ -40,31 +40,31 @@
   ```python
   {
   "path": {
-      "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",     // 你的安装路径
+      "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",     # 你的安装路径
       "腾讯课堂": "C:/Program Files (x86)/Tencent/EDU/bin/TXEDU.exe"
   },
   "class": [
       {
-          "name": "泡面的艺术",                // 课程名称
-          "platform": "腾讯会议",              // 平台（目前支持腾讯会议和腾讯课堂）
-          "detail": {                         // 详细信息，包括网址、会议号、会议密码、入会名称
+          "name": "泡面的艺术",                # 课程名称
+          "platform": "腾讯会议",              # 平台（目前支持腾讯会议和腾讯课堂）
+          "detail": {                         # 详细信息，包括网址、会议号、会议密码、入会名称
               "url": "",
               "id": "123-4567-8901",
               "passwd": "12345",
               "myname": "3141592653-张三",
-              "auto_close_audio": true        // 自动静音，默认为 true
+              "auto_close_audio": true        # 自动静音，默认为 true
           },
-          "weekday": [1, 3, 5],               // 上课的星期
-          "time": "8:30",                     // 课程开始时间
-          "time_range": [-5, 15],             // 允许登录的时间范围
-                                              //（提前5分钟或者推迟15分钟的范围内，如果还没登录就会登录）
-          "time_lasting": 100                 // 课程时长
+          "weekday": [1, 3, 5],               # 上课的星期
+          "time": "8:30",                     # 课程开始时间
+          "time_range": [-5, 15],             # 允许登录的时间范围
+                                              #（提前5分钟或者推迟15分钟的范围内，如果还没登录就会登录）
+          "time_lasting": 100                 # 课程时长
       },
       {
           "name": "睡大觉",
           "platform": "腾讯课堂",
           "detail": {
-              "using": "url",                 // 课堂登录方式（目前还仅支持 url 网页登录）
+              "using": "url",                 # 课堂登录方式（目前还仅支持 url 网页登录）
               "url": "https://ke.qq.com/webcourse/1234567/123456789#taid=12345678901234567&lite=1"
           },
           "weekday": [1, 2, 3, 4, 5, 6, 7],
