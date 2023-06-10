@@ -37,7 +37,7 @@
 
 - 仅需配置 `user-config/class.json`
 
-  ```json
+  ```python
   {
   "path": {
       "腾讯会议": "C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe",     // 你的安装路径
