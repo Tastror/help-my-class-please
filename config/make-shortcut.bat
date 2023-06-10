@@ -13,8 +13,8 @@ set iconFilePath=%pwd%\..\img\ico.ico
 
 set vbsFilePath=%pwd%\tmp.vbs
 
-copy "%targetFilePath_original%" "%targetFilePath%"
-copy "%jsonFilePath_original%" "%jsonFilePath%"
+if not exist %targetFilePath% (copy "%targetFilePath_original%" "%targetFilePath%")
+if not exist %jsonFilePath% (copy "%jsonFilePath_original%" "%jsonFilePath%")
 
 echo set oWS = WScript.CreateObject("WScript.Shell") > "%vbsFilePath%"
 echo set oLink = oWS.CreateShortcut("%linkFilePath%") >> "%vbsFilePath%"
