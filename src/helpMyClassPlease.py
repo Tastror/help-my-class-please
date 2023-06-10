@@ -34,7 +34,6 @@ class HelpMyClassPlease:
         self.read_config()
         self.gtc = GoToClass(self.path)
         self.today_list = [i for i in range(len(self.config))]
-        log.warning("如果开启 proxy，网页功能可能无法正常启动，请检查后再开启本程序")
         log.enter()
 
     def read_config(self) -> None:
