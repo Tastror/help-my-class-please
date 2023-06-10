@@ -25,7 +25,7 @@ class HelpMyClassPlease:
             "minute, now weekday, now time]"
         )
         parser.add_argument(
-            '-j', '--json', type=str, default="../config/class.json", help="add your class.json path"
+            '-j', '--json', type=str, default="../user-config/hmcp.json", help="add your hmcp.json path"
         )
         self.args = parser.parse_args()
         self.args.test = ast.literal_eval(self.args.test)

@@ -13,8 +13,8 @@ set iconFilePath=%pwd%resource\ico\normal.ico
 
 set targetFilePath_original=%pwd%resource\config\run-hmcp.bat
 set targetFilePath=%pwd%user-config\run-hmcp.bat
-set jsonFilePath_original=%pwd%resource\config\class.json
-set jsonFilePath=%pwd%user-config\class.json
+set jsonFilePath_original=%pwd%resource\config\hmcp.json
+set jsonFilePath=%pwd%user-config\hmcp.json
 
 set vbsFilePath=%pwd%tmp.vbs
 

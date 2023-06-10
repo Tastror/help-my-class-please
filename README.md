@@ -13,11 +13,13 @@
 
 ## 运行方式
 
-1. 建立虚拟环境并安装依赖项，以 `conda`、环境命名为 `class` 为例。
+1. 运行（或双击）`conda-make-hmcp.bat`。
+
+   该操作将建立虚拟环境 `hmcp` 并安装依赖项。如果你需要自行修改，可以输入如下命令（仍以 `hmcp` 为例）代替上面的 bat，同时第三步也要略作调整。
 
    ```shell
-   conda create -n class python=3.10
-   conda activate class
+   conda create -n hmcp python=3.10
+   conda activate hmcp
    pip install -r requirements.txt
    # or you can use: conda install --file requirements.txt
    ```
@@ -25,17 +27,17 @@
 2. 运行（或双击）`init-and-make-shortcut.bat`。
 
    > 这一步会在桌面生成 `HMCP.lnk` 链接，指向 `user-config/run-hmcp.bat`。  
-   > `user-config/run-hmcp.bat` 会使用 `user-config/class.json` 作为课程配置，见配置方式。
+   > `user-config/run-hmcp.bat` 会使用 `user-config/hmcp.json` 作为课程配置，见配置方式。
 
 3. 双击桌面的 `HMCP`，看看是否能成功运行。
 
-   > 如果你没有使用 conda、使用的 conda 环境不叫 class、使用了别的 . json，请自行修改 `user-config/run-hmcp.bat`。
+   > 如果你没有使用 conda，或者使用的 conda 环境不叫 `hmcp`，或者使用了别的 `hmcp.json`，请自行修改 `user-config/run-hmcp.bat`。
 
 4. 如果要一直运行，需要后台常开且电脑不能进入睡眠模式。
 
 ## 配置方式
 
-- 仅需配置 `user-config/class.json`
+- 仅需配置 `user-config/hmcp.json`
 
   ```python
   {
@@ -85,10 +87,10 @@
   python helpMyClassPlease.py
   ```
   
-  如果要自行使用参数（如重新指定 class.json 路径、启动测试时间），可以使用
+  如果要自行使用参数（如重新指定 hmcp.json 路径、启动测试时间），可以使用
   
   ```shell
-  python helpMyClassPlease.py -j "..\user-config\class.json"
+  python helpMyClassPlease.py -j "..\user-config\hmcp.json"
                                # or use --json
   python helpMyClassPlease.py -t "[10, 2, 499]"
                                # or use --test

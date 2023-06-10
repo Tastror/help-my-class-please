@@ -4,5 +4,5 @@ __pycache__
 /user-data
 /user-config
 
-class.log
-class.log.*
+hmcp.log
+hmcp.log.*

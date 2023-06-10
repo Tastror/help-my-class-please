@@ -12,7 +12,7 @@ white_console = "37"
 
 
 log_log = None
-log_path = '../class.log'
+log_path = '../hmcp.log'
 
 
 def _init():

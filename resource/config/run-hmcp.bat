@@ -3,8 +3,8 @@
 cd /d "%~dp0"
 cd "..\src"
 
-@REM "class" is your python environment, you may need to change it
-call conda activate class
+@REM "hmcp" is your python environment, you may need to change it
+call conda activate hmcp
 
-@REM "class.json" is your class.json, you must modify it !!!
-python .\helpMyClassPlease.py -j "..\user-config\class.json"
+@REM "hmcp.json" is your hmcp.json, you must modify it !!!
+python .\helpMyClassPlease.py -j "..\user-config\hmcp.json"
