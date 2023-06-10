@@ -22,22 +22,20 @@
    # or you can use: conda install --file requirements.txt
    ```
 
-2. 进入 `config` 目录。
+2. 运行（或双击）`init-and-make-shortcut.bat`。
 
-3. 运行（或双击）`make-shortcut.bat`。
+   > 这一步会在桌面生成 `HMCP.lnk` 链接，指向 `config/my-run-hmcp.bat`。  
+   > `config/my-run-hmcp.bat` 会使用 `config/my-class.json` 作为课程配置，见配置方式。
 
-   > 这一步会在桌面生成 `HMCP.lnk` 链接，指向 `my-class-shortcut.bat`。  
-   > `my-class-shortcut.bat` 会使用 `my-class.json` 作为课程配置，见下。
+3. 双击桌面的 `HMCP`，看看是否能成功运行。
 
-4. 双击桌面的 `HMCP`，看看是否能成功运行。
+   > 如果你没有使用 conda、使用的 conda 环境不叫 class、使用了别的 . json，请自行修改 `config/my-run-hmcp.bat`。
 
-   > 如果你没有使用 conda、使用的 conda 环境不叫 class、使用了别的 . json，请自行修改 `my-class-shortcut.bat`。
-
-5. 如果要一直运行，需要后台常开且电脑不能进入睡眠模式。
+4. 如果要一直运行，需要后台常开且电脑不能进入睡眠模式。
 
 ## 配置方式
 
-- 仅需配置 `my-class.json`
+- 仅需配置 `config/my-class.json`
 
   ```json
   {

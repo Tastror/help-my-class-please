@@ -4,7 +4,7 @@ __pycache__
 /data
 /config/*
 !/config/class.json
-!/config/class-shortcut.bat
+!/config/run-hmcp.bat
 !/config/make-shortcut.bat
 
 class.log
