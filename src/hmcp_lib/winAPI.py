@@ -3,6 +3,7 @@ import time
 import win32gui
 import win32con
 import win32process
+import hmcp_lib as he
 
 
 def open_awake(class_name, title, path: str, sep_time=4, wait_time=0) -> int:
@@ -34,7 +35,7 @@ def awake(hwnd: int) -> int:
     try:
         win32gui.ShowWindow(hwnd, win32con.SW_SHOWNORMAL)
         win32gui.SetForegroundWindow(hwnd)
-        return 2
+        return he.OK
     except Exception as e:
         print(e)
-        return 3
+        return he.ERROR

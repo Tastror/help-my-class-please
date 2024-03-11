@@ -22,7 +22,7 @@ class GoToClass:
             tick -= 1
             time_use = time.time()
             he.log.tip(log + "签到检查剩余", tick, "次")
-            he.view.click_list("tencent_ketang_qiandao", "tencent_ketang_qiandao_2", log="签到按键")
+            he.view.click_multiple_possible_images("tencent_ketang_qiandao", "tencent_ketang_qiandao_2", log="签到按键")
             time.sleep(self.check_interval - (time.time() - time_use))
 
     def detect_qrcode(self, log: str, lasting_minutes: int) -> None:
@@ -82,38 +82,38 @@ class GoToClass:
 
             if meeting_id != "":
                 he.log.tip("正在打开腾讯会议窗口，请等待几秒")
-                if he.winAPI.open_awake(None, "腾讯会议", self.path_dict.get('腾讯会议'), sep_time=5, wait_time=5) != 2:
+                if he.winAPI.open_awake(None, "腾讯会议", self.path_dict.get('腾讯会议'), sep_time=5, wait_time=5) != he.OK:
                     he.log.warning("腾讯会议窗口可能打开失败")
                 he.log.tip("正在尝试加入会议")
-                if he.view.see('add_meeting', log="加入会议") != 2:
+                if he.view.see('add_meeting', log="加入会议") != he.OK:
                     he.log.tip("进入任务栏查找腾讯会议")
                     he.pag.hotkey('win', 'tab', log="win + tab", wait_time=1.5)
-                    if he.view.click('wemeet_tab', log="腾讯会议标志图", wait_time=1) != 2:
+                    if he.view.click('wemeet_tab', log="腾讯会议标志图", wait_time=1) != he.OK:
                         he.view.click('wemeet_tab2', log="腾讯会议标志图(2)", wait_time=1)
                 # 断网等待 1
                 rep = 0
-                while he.view.see('wireless_board', log="共享屏幕", threshold=0.85) != 2 and rep < 10:
+                while he.view.see('wireless_board', log="共享屏幕", threshold=0.85) != he.OK and rep < 10:
                     time.sleep(1)
                     rep += 1
-                he.view.click('add_meeting', log="加入会议", wait_time=1)
+                he.view.click('add_meeting', log="加入会议", wait_time=0.1)
                 # 断网等待 2
                 rep = 0
-                while he.view.see('meeting_id', log="会议号", threshold=0.85) != 2 and rep < 10:
+                while he.view.see('meeting_id', log="会议号", threshold=0.85) != he.OK and rep < 10:
                     time.sleep(1)
                     rep += 1
                     he.view.click('add_meeting', log="加入会议", wait_time=1)
                 he.view.click('meeting_id', 1, 2.5, log="会议号")
                 he.pag.clear_paste(meeting_id, log="会议号")
                 if myname != "":
-                    if he.view.click('your_name', 1, 2.5, log="您的名称") == 2:
+                    if he.view.click('your_name', 1, 2.5, log="您的名称") == he.OK:
                         he.pag.clear_paste(myname, log="您的名称")
                 if auto_close_audio:
                     if he.view.compare("camera_closed", "camera_open", log="摄像头是否关闭") == 1:
-                        he.view.click("camera_open", width_rate=0.1, log="摄像头关闭键", wait_time=0.5)
+                        he.view.click("camera_open", width_offset_rate=0.1, log="摄像头关闭键", wait_time=0.5)
                     if he.view.compare("microphone_closed", "microphone_open", log="麦克风是否关闭") == 1:
-                        he.view.click("microphone_open", width_rate=0.1, log="麦克风关闭键", wait_time=0.5)
+                        he.view.click("microphone_open", width_offset_rate=0.1, log="麦克风关闭键", wait_time=0.5)
                 he.view.click("add_meeting_bar", log="加入会议", wait_time=4)
-                if he.view.see("passwd", log="入会密码", threshold=0.85) == 2:
+                if he.view.see("passwd", log="入会密码", threshold=0.85) == he.OK:
                     if passwd == "":
                         he.log.warning("加入会议可能不成功：未指定入会密码")
                     else:
@@ -146,10 +146,10 @@ class GoToClass:
 
             if using == "client":
                 he.log.tip("正在打开客户端")
-                if he.winAPI.open_awake(None, "登录", self.path_dict.get('腾讯课堂'), sep_time=4, wait_time=2) != 2:
+                if he.winAPI.open_awake(None, "登录", self.path_dict.get('腾讯课堂'), sep_time=4, wait_time=2) != he.OK:
                     he.log.error("腾讯课堂窗口打开失败")
                     return 3
-                if he.view.see("quick_login", log="快速登录", threshold=0.8) == 2:
+                if he.view.see("quick_login", log="快速登录", threshold=0.8) == he.OK:
                     he.view.click("quick_login", log="快速登录", wait_time=2)
 
             if using == "url":
@@ -166,7 +166,7 @@ class GoToClass:
                     time.sleep(1)
                     he.log.warning("即将使用QQ登录课堂，请确保你的QQ在线")
                     rep = 0
-                    while he.view.see("ke_qq_login", log="QQ快速登陆", wait_time=1) != 2 and rep < 10:
+                    while he.view.see("ke_qq_login", log="QQ快速登陆", wait_time=1) != he.OK and rep < 10:
                         time.sleep(1)
                         rep += 1
                     he.view.click("ke_qq_login", 0.6, -0.6, log="QQ快速登陆")
